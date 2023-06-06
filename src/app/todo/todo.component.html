@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="row">
+
+    <div class="col-5 mx-auto">
+      <div class="bg-dark rounded-2 p-3 shadow-lg">
+
+        <!-- ! todoList head - [START] ! -->
+        <div class="mb-3">
+          <h3 class="text-light m-0 p-0 mb-3"> {{getName()}} TodoList</h3>
+
+          <!-- ! items add - [START] ! -->
+          <div>
+            <div class="input-group">
+              <input #txtDesc type="text" class="form-control" (keyup.enter)="addItem(txtDesc.value); txtDesc.value=''" (keyup)="message=''" >
+              <button type="button" class="btn btn-outline-success" (click)="addItem(txtDesc.value); txtDesc.value=''">Ekle</button>
+            </div>
+            <span class="text-danger">{{message}}</span>
+          </div>
+          <!-- ! items add - [END^] ! -->
+        </div>
+         <!-- ! todoList head - [END^] ! -->
+
+
+        <!-- ! todoList body - [START] ! -->
+        <div>
+          <!-- ! switch, info, clear - [START] ! -->
+          <div class="d-flex justify-content-between alin-items-center mb-2">
+            <div class="form-check form-switch">
+              <input type="checkbox" [(ngModel)]="displayAll" class="form-check-input" role="switch" id="displayAll">
+              <label for="displayAll" class="form-check-label text-light">{{ displayAll ? 'Yapılacakalar' : 'Tümü' }}</label>
+            </div>
+
+            <div class="text-light d-flex flex-row gap-2 align-items-center justify-content-center ">
+              <span class="badge bg-primary">Toplam: {{ allItems() }} </span>
+              <span class="badge bg-success">Yapılan: {{ madeItems() }} </span>
+              <span class="badge bg-danger">Yapılacak: {{ onHoldItems() }}</span>
+              <button type="button" (click)="clearLS()" class="btn text-danger m-0 p-0" title="Tümünü Temizle"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+          </div>
+          <!-- ! switch, info, clear - [END^] ! -->
+
+          <!-- ? eğer tablo boş olursa buradaki div aktif hale gelecektir -->
+          <div class="bg-warning py-2 px-1 text-center rounded-2" *ngIf="getItems().length == 0 else itemsTable ">
+            Tüm görevler tamamlandı.
+          </div>
+
+          <!-- ! table - [START] ! -->
+          <ng-template #itemsTable>
+            <table class="table table-striped text-center rounded-2 overflow-hidden m-0 p-0">
+              <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Açıklama</th>
+                    <th>Durum</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  <tr *ngFor="let item of getItems(); let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.description }}</td>
+                    <td class="w-25">
+                      <span class="badge" [class]="{ 'bg-success': item.action, 'bg-danger': !item.action }">
+                        {{ item.action ? 'Yapıldı' : 'Yapılacak' }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" role="switch" [(ngModel)]="item.action" (change)="onActionChanged(item)">
+                      </div>
+                    </td>
+                  </tr>
+
+                </tbody>
+            </table>
+          </ng-template>
+          <!-- ! table - [END^] ! -->
+        </div>
+        <!-- ! todoList body - [END^] ! -->
+
+      </div>
+    </div>
+
+  </div>
+</div>
